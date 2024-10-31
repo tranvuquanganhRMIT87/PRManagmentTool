@@ -28,6 +28,8 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 	//
 	//w.WriteHeader(http.StatusOK)
 	//w.Write([]byte(`{"status": "received"}`))
+
+	fmt.Printf("Received Payload: %+v\n", r.Body)
 	var payload struct {
 		Action      string `json:"action"`
 		PullRequest struct {
