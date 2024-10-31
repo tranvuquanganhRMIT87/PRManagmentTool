@@ -1,6 +1,6 @@
 package Model
 
-type PullRequest struct {
+type payload struct {
 	Id          string `json:"id"`
 	Action      string `json:"action"`
 	Order       int    `json:"number"`
