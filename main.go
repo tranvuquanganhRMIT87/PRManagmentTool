@@ -30,6 +30,8 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 	//w.Write([]byte(`{"status": "received"}`))
 
 	fmt.Printf("Received Payload: %+v\n", r.Body)
+	fmt.Println("Received a webhook event", r.Method)
+	fmt.Println("Received a ResponseWriter", w)
 	var payload struct {
 		Action      string `json:"action"`
 		PullRequest struct {
