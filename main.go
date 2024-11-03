@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"ngrok-go-quickstart/Shared"
+	"os"
 )
 
 func webhookHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,9 +29,9 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
 	//w.Write([]byte(`{"status": "received"}`))
 
-	fmt.Printf("Received Payload: %+v\n", r.Body)
-	fmt.Println("Received a webhook event", r.Method)
-	fmt.Println("Received a ResponseWriter", w)
+	//fmt.Printf("Received Payload: %+v\n", r.Body)
+	//fmt.Println("Received a webhook event", r.Method)
+	//fmt.Println("Received a ResponseWriter", w)
 	var payload struct {
 		Action      string `json:"action"`
 		PullRequest struct {
@@ -52,17 +52,18 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid payload", http.StatusBadRequest)
 		return
 	}
-
+	fmt.Println("Sending payload:", payload)
 	// Only handle "opened" pull requests
 	if payload.Action == "opened" {
 		message := fmt.Sprintf(
-			"New Pull Request in repository %s:\nTitle: %s\nBy: %s\nPR URL: %s\nRepository URL: %s",
+			"New!!!: New Pull Request in repository %s:\nTitle: %s\nBy: %s\nPR URL: %s\nRepository URL: %s",
 			payload.Repository.FullName,
 			payload.PullRequest.Title,
 			payload.PullRequest.User.Login,
 			payload.PullRequest.URL,
 			payload.Repository.HTMLURL,
 		)
+		//fmt.Println("Sending message:", message)
 
 		// Send the message to Telegram
 		if err := sendTelegramMessage(message); err != nil {
@@ -70,9 +71,10 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	var rawPayload map[string]interface{}
-	json.NewDecoder(r.Body).Decode(&rawPayload)
-	fmt.Printf("Received Payload: %+v\n", rawPayload)
+	//
+	//var rawPayload map[string]interface{}
+	//json.NewDecoder(r.Body).Decode(&rawPayload)
+	//fmt.Printf("Received Payload: %+v\n", rawPayload)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -93,14 +95,19 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 
 // Function to send a Telegram message
 func sendTelegramMessage(message string) error {
-	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", Shared.TelegramBotToken)
+	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", os.Getenv("TELEGRAM_BOT_TOKEN"))
+
 	payload := map[string]string{
-		"chat_id": Shared.ChatID,
+		"chat_id": os.Getenv("CHAT_ID"),
 		"text":    message,
 	}
+	fmt.Println("payload", payload)
 	jsonData, _ := json.Marshal(payload)
+	fmt.Println("jsonData", bytes.NewBuffer(jsonData))
 
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	//fmt.Println(resp)
+	//fmt.Println(err)
 	if err != nil {
 		return err
 	}
