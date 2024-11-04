@@ -43,9 +43,9 @@ func githubWebhookHandler(w http.ResponseWriter, r *http.Request) {
 		message := fmt.Sprintf(
 			"🆕: New Pull Request in repository %s:\nTitle: %s\nBy: %s\nPR URL: %s\nRepository URL: %s",
 			Model.Payload.Repository.FullName,
-			Model.Payload.PullRequest.Title,
-			Model.Payload.PullRequest.User.Login,
-			Model.Payload.PullRequest.URL,
+			Model.Payload.EventType.Title,
+			Model.Payload.EventType.User.Login,
+			Model.Payload.EventType.URL,
 			Model.Payload.Repository.HTMLURL,
 		)
 
