@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/docker/docker/pkg/ioutils"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
@@ -22,9 +23,11 @@ func githubWebhookHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid payload", http.StatusBadRequest)
 		return
 	}
+	fmt.Println("PayLoad", Model.Payload.Action)
 
+	var message string
 	if Model.Payload.Action == "opened" {
-		message := fmt.Sprintf(
+		message = fmt.Sprintf(
 			"🆕: New Pull Request in repository %s:\nTitle: %s\nBy: %s\nPR URL: %s\nRepository URL: %s",
 			Model.Payload.Repository.FullName,
 			Model.Payload.PullRequest.Title,
@@ -32,29 +35,40 @@ func githubWebhookHandler(w http.ResponseWriter, r *http.Request) {
 			Model.Payload.PullRequest.URL,
 			Model.Payload.Repository.HTMLURL,
 		)
-		fmt.Println("Sending message:", message)
-
-		bot := internal.NewTelegram(os.Getenv("TELE_BOT_TOKEN"))
-		fmt.Println("Connected to telegram", bot)
-		fmt.Println("Key", os.Getenv("TELE_BOT_TOKEN"))
-		if err := bot.Connect(); err != nil {
-			log.Fatal(err)
-		}
-
-		threadID, err := strconv.Atoi(os.Getenv("THREAD_ID"))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		chatId, err := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
-
-		formatedMessage := internal.NewBotMessage(chatId, &threadID, message)
-
-		// Send the message to Telegram
-		if err := bot.SendMessage(formatedMessage); err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Println("Sent message to telegram")
 	}
+
+	fmt.Println("Sending message:", message)
+
+	bot := internal.NewTelegram(os.Getenv("TELE_BOT_TOKEN"))
+	fmt.Println("Connected to telegram", bot)
+	fmt.Println("Key", os.Getenv("TELE_BOT_TOKEN"))
+	if err := bot.Connect(); err != nil {
+		log.Fatal(err)
+	}
+
+	threadID, err := strconv.Atoi(os.Getenv("THREAD_ID"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// After
+	payloadBytes, err := json.Marshal(Model.Payload)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = ioutils.AtomicWriteFile("thread_id.txt", payloadBytes, 0644)
+	if err != nil {
+		return
+	}
+
+	chatId, err := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
+
+	formatedMessage := internal.NewBotMessage(chatId, &threadID, message)
+
+	// Send the message to Telegram
+	if err := bot.SendMessage(formatedMessage); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Sent message to telegram")
 }
