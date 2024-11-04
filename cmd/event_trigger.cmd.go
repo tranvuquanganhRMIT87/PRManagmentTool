@@ -3,7 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/docker/docker/pkg/ioutils"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
@@ -65,14 +64,14 @@ func githubWebhookHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// After
-		payloadBytes, err := json.Marshal(&Model.Payload)
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = ioutils.AtomicWriteFile("thread_id.txt", payloadBytes, 0644)
-		if err != nil {
-			return
-		}
+		//payloadBytes, err := json.Marshal(&Model.Payload)
+		//if err != nil {
+		//	log.Fatal(err)
+		//}
+		//err = ioutils.AtomicWriteFile("thread_id.txt", payloadBytes, 0644)
+		//if err != nil {
+		//	return
+		//}
 
 		chatId, err := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 
