@@ -1,7 +1,10 @@
 package Model
 
 var Payload struct {
-	Action      string `json:"action"`
+	Action  string `json:"action"`
+	Commits []struct {
+		Message string `json:"message"`
+	} `json:"commits"`
 	PullRequest struct {
 		URL   string `json:"html_url"`
 		Title string `json:"title"`

@@ -15,6 +15,7 @@ import (
 
 func githubWebhookHandler(w http.ResponseWriter, r *http.Request) {
 	eventType := r.Header.Get("X-GitHub-Event")
+
 	fmt.Println("Received a webhook event", eventType)
 
 	err := godotenv.Load()
@@ -29,12 +30,14 @@ func githubWebhookHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if err := json.NewDecoder(r.Body).Decode(&rs); err != nil {
-	//	http.Error(w, "Invalid payload", http.StatusBadRequest)
-	//	return
-	//}
-	//
-	//fmt.Println("rs", rs) //var message string
+	for _, commit := range Model.Payload.Commits {
+		if len(commit.Message) > 5 && (commit.Message[:5] == "Merge" || commit.Message[:7] == "Merged ") {
+			fmt.Println("Received a merge commit, skipping", commit.Message[:5])
+			fmt.Println("Received a merge commit, skipping", commit.Message[:7])
+			break
+		}
+	}
+
 	if Model.Payload.Action == "opened" {
 		message := fmt.Sprintf(
 			"🆕: New Pull Request in repository %s:\nTitle: %s\nBy: %s\nPR URL: %s\nRepository URL: %s",
