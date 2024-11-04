@@ -5,13 +5,13 @@ var Payload struct {
 	Commits []struct {
 		Message string `json:"message"`
 	} `json:"commits"`
-	PullRequest struct {
+	EventType struct {
 		URL   string `json:"html_url"`
 		Title string `json:"title"`
 		User  struct {
 			Login string `json:"login"`
 		} `json:"user"`
-	} `json:"pull_request"`
+	} `json:"event_type"`
 	Repository struct {
 		FullName string `json:"full_name"`
 		HTMLURL  string `json:"html_url"`
