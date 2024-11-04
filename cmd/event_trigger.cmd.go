@@ -38,6 +38,8 @@ func githubWebhookHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	fmt.Println("Sending payload:", Model.Payload.Commits)
+
 	if Model.Payload.Action == "opened" {
 		message := fmt.Sprintf(
 			"🆕: New Pull Request in repository %s:\nTitle: %s\nBy: %s\nPR URL: %s\nRepository URL: %s",
