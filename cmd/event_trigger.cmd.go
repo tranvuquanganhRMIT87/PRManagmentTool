@@ -25,7 +25,7 @@ func githubWebhookHandler(w http.ResponseWriter, r *http.Request) {
 
 	if Model.Payload.Action == "opened" {
 		message := fmt.Sprintf(
-			"New!!!: New Pull Request in repository %s:\nTitle: %s\nBy: %s\nPR URL: %s\nRepository URL: %s",
+			"🆕: New Pull Request in repository %s:\nTitle: %s\nBy: %s\nPR URL: %s\nRepository URL: %s",
 			Model.Payload.Repository.FullName,
 			Model.Payload.PullRequest.Title,
 			Model.Payload.PullRequest.User.Login,
