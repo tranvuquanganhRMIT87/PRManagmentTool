@@ -30,7 +30,8 @@ Content type: Choose application/json to get the payload data in JSON format.
 
 Secret: (Optional) Add a secret token. This is useful for verifying that requests come from GitHub. You’ll use this token to validate the signature of incoming webhook requests.
 
-Events: Select the event type(s) you want to receive. For pull requests, select:
-
+Events: Select the event type(s) you want to receive. 
+For pull requests, select:
 Let me select individual events and then check the Pull requests option.
+
 Active: Ensure this box is checked so that the webhook is active.
