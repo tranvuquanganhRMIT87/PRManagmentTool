@@ -24,7 +24,7 @@ ngrok http http://localhost:8080
 Settings -> Look at the left sidebar -> Webhooks -> Add Webhook -> Fill information
 
 ### Example:
-Payload URL: Enter the URL of your server where you want to receive the webhook events. This URL should point to an endpoint in your application that can handle POST requests (e.g., https://example.com/webhooks/github).
+Payload URL: Enter the URL of your server where you want to receive the webhook events. This URL should point to an endpoint in your application that can handle POST requests (e.g., https://<yourngrok>.ngrok-free.app/webhook).
 
 Content type: Choose application/json to get the payload data in JSON format.
 
