@@ -1,6 +1,7 @@
 # On local
 
 ## Installation ngrok
+### Windows
 ```
 curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
 	| sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
@@ -8,6 +9,11 @@ curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
 	| sudo tee /etc/apt/sources.list.d/ngrok.list \
 	&& sudo apt update \
 	&& sudo apt install ngrok
+```
+
+### MacOS
+```
+brew install ngrok
 ```
 ## Configure and run
 ### Add your authtoken:
