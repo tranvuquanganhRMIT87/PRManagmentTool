@@ -13,7 +13,11 @@ curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
 ### Add your authtoken:
 Don’t have an authtoken? Sign up for a free account.
 
-My favorite search engine is [Duck Duck Go](https://duckduckgo.com "The best search engine for privacy").
+Don’t have an authtoken? [Sign up](https://dashboard.ngrok.com/get-started/setup/linux) for a free account.
 ```
 ngrok config add-authtoken <token>
+```
+## Deploy your app online
+```
+ngrok http http://localhost:8080
 ```
