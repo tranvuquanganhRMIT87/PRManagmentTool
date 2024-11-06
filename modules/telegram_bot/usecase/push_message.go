@@ -31,8 +31,12 @@ func (p *pushMessageUseCase) Execute(ctx context.Context, payload telegrambotmod
 	chatId := p.config.GetChatID()
 	threadId := p.config.GetThreadID()
 
-	if payload.Action == "opened" {
-		message := fmt.Sprintf(
+	var message string
+	pr, _ := share.ExtractPRNumber(payload.PullRequest.URL)
+
+	switch payload.Action {
+	case "opened":
+		message = fmt.Sprintf(
 			"**🔥 New Pull Request in repository [%s](%s):**\n\n"+
 				"📝 **Title**\n"+
 				"> %s\n\n"+
@@ -45,14 +49,24 @@ func (p *pushMessageUseCase) Execute(ctx context.Context, payload telegrambotmod
 			payload.PullRequest.URL,
 			payload.PullRequest.URL,
 		)
+	case "closed":
 
-		formatedMessage := components.NewBotMessage(chatId, &threadId, message)
+		message = fmt.Sprintf(
+			"**✅ Pull Request #%s Merged!**\n\n"+
+				"🎉 **Congratulations!** The pull request has been successfully merged!\n\n"+
+				"👤 **Merged By:** %s\n\n"+
+				"🚀 **Happy coding!**",
+			pr,
+			payload.PullRequest.User.Login,
+		)
 
-		if err := p.action.SendMessage(formatedMessage); err != nil {
-			return false, err
-		}
+	}
+
+	formattedMessage := components.NewBotMessage(chatId, &threadId, message)
+
+	if err := p.action.SendMessage(formattedMessage); err != nil {
+		return false, err
 	}
 
 	return true, nil
-
 }
