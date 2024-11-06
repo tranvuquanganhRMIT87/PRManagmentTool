@@ -10,7 +10,7 @@ type Repository struct {
 type PullRequest struct {
 	Title string `json:"title"`
 	User  User   `json:"user"`
-	URL   string `json:"url"`
+	URL   string `json:"html_url"`
 }
 
 // User represents the user information in the pull request.

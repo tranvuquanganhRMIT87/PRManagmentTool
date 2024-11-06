@@ -51,7 +51,7 @@ func (t *Telegram) Connect() error {
 
 func (t *Telegram) SendMessage(message Message) error {
 	if t.Bot == nil {
-		return fmt.Errorf("Telegram bot is not initialized")
+		return fmt.Errorf("telegram bot is not initialized")
 	}
 
 	msg := tgbotapi.NewMessage(message.ChatID, message.Text)

@@ -33,12 +33,17 @@ func (p *pushMessageUseCase) Execute(ctx context.Context, payload telegrambotmod
 
 	if payload.Action == "opened" {
 		message := fmt.Sprintf(
-			"🆕: New Pull Request in repository %s:\nTitle: %s\nBy: %s\nPR URL: %s\nRepository URL: %s",
+			"**🔥 New Pull Request in repository [%s](%s):**\n\n"+
+				"📝 **Title**\n"+
+				"> %s\n\n"+
+				"👤 **By:** %s\n"+
+				"🌐 **PR URL:** [%s](%s)",
 			payload.Repository.FullName,
+			payload.Repository.HTMLURL,
 			payload.PullRequest.Title,
 			payload.PullRequest.User.Login,
 			payload.PullRequest.URL,
-			payload.Repository.HTMLURL,
+			payload.PullRequest.URL,
 		)
 
 		formatedMessage := components.NewBotMessage(chatId, &threadId, message)
