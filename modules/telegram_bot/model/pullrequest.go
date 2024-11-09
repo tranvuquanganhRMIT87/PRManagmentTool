@@ -14,6 +14,15 @@ type PullRequest struct {
 	User   User   `json:"user"`
 	URL    string `json:"html_url"`
 	Number int    `json:"number"`
+	Head   Head   `json:"head"`
+	Base   Base   `json:"base"`
+}
+
+type Head struct {
+	Ref string `json:"ref"`
+}
+type Base struct {
+	Ref string `json:"ref"`
 }
 
 // User represents the user information in the pull request.

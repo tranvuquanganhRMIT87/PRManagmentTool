@@ -13,6 +13,7 @@ type EnvConfig interface {
 	GetGithubToken() string
 	GetChatID() int64
 	GetThreadID() int
+	GetModels() string
 	InitConfig()
 }
 
@@ -40,6 +41,10 @@ func (env *env) GetThreadID() int {
 }
 func (env *env) GetGithubToken() string {
 	return os.Getenv("GITHUB_TOKEN")
+}
+
+func (env *env) GetModels() string {
+	return os.Getenv("MODELS")
 }
 
 func (env *env) InitConfig() {

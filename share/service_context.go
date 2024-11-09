@@ -1,6 +1,7 @@
 package share
 
 import (
+	"ngrok-go-quickstart/Components/chatGPT"
 	githubs "ngrok-go-quickstart/Components/github"
 	internal "ngrok-go-quickstart/Components/telegram"
 )
@@ -8,6 +9,7 @@ import (
 type serviceContext struct {
 	TelegramBot internal.TelegramBot
 	GithubAPI   githubs.GithubApi
+	OpenAI      chatGPT.CodeReviewAssistant
 	Config      EnvConfig
 }
 
@@ -28,9 +30,13 @@ func (s *serviceContext) GetTelegramBot() internal.TelegramBot {
 func (s *serviceContext) GetGithubAPI() githubs.GithubApi {
 	return s.GithubAPI
 }
+func (s *serviceContext) GetOpenAI() chatGPT.CodeReviewAssistant {
+	return s.OpenAI
+}
 
 type ServiceContext interface {
 	GetConfig() EnvConfig
 	GetTelegramBot() internal.TelegramBot
 	GetGithubAPI() githubs.GithubApi
+	GetOpenAI() chatGPT.CodeReviewAssistant
 }

@@ -9,7 +9,7 @@ import (
 
 func SetupTelegramBotService(sctx share.ServiceContext, mux *http.ServeMux) {
 
-	pushMsgUC := usecase.NewPushMessageUseCase(sctx.GetTelegramBot(), sctx.GetConfig(), sctx.GetGithubAPI())
+	pushMsgUC := usecase.NewPushMessageUseCase(sctx.GetTelegramBot(), sctx.GetConfig(), sctx.GetGithubAPI(), sctx.GetOpenAI())
 
 	pushMsgHdl := transport.NewHttpService(pushMsgUC)
 
