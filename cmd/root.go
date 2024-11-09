@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
+	githubs "ngrok-go-quickstart/Components/github"
 	components "ngrok-go-quickstart/Components/logrus"
 	internal "ngrok-go-quickstart/Components/telegram"
 	"ngrok-go-quickstart/middleware"
@@ -26,11 +28,19 @@ func Execute() {
 		log.Fatalf("Failed to connect to Telegram: %v", err)
 	}
 
+	// Connect to GitHub
+	ctx := context.Background()
+	githubAPI := githubs.NewGithub(config.GetGithubToken())
+	err := githubAPI.Connect(ctx, nil)
+	if err != nil {
+		log.Fatalf("Failed to connect to GitHub: %v", err)
+	}
+
 	// Initialize server mux
 	mux := http.NewServeMux()
 
 	// Initialize service context
-	serviceContext := share.NewServiceContext(bot, config)
+	serviceContext := share.NewServiceContext(bot, config, githubAPI)
 
 	// Set up routes
 	telegram_bot.SetupTelegramBotService(serviceContext, mux)

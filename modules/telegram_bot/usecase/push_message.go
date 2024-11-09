@@ -3,20 +3,24 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log"
+	githubs "ngrok-go-quickstart/Components/github"
 	components "ngrok-go-quickstart/Components/telegram"
 	telegrambotmodel "ngrok-go-quickstart/modules/telegram_bot/model"
 	"ngrok-go-quickstart/share"
 )
 
 type pushMessageUseCase struct {
-	action components.TelegramBot
-	config share.EnvConfig
+	action    components.TelegramBot
+	config    share.EnvConfig
+	githubAPI githubs.GithubApi
 }
 
-func NewPushMessageUseCase(action components.TelegramBot, config share.EnvConfig) *pushMessageUseCase {
+func NewPushMessageUseCase(action components.TelegramBot, config share.EnvConfig, githubAPI githubs.GithubApi) *pushMessageUseCase {
 	return &pushMessageUseCase{
 		action,
 		config,
+		githubAPI,
 	}
 }
 
@@ -68,5 +72,14 @@ func (p *pushMessageUseCase) Execute(ctx context.Context, payload telegrambotmod
 		return false, err
 	}
 
+	owner := payload.GetOwner()
+	repo := payload.Repository.FullName
+	prNumber := payload.PullRequest.Number
+
+	_, err := p.githubAPI.ListPullRequestFiles(ctx, owner, repo, prNumber)
+	if err != nil {
+		log.Fatalf("Failed to list PR files: %v", err)
+	}
+	
 	return true, nil
 }

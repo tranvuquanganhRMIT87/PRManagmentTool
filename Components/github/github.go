@@ -1,4 +1,4 @@
-package components
+package githubs
 
 import (
 	"context"
@@ -14,12 +14,18 @@ type GithubApi interface {
 	ListPullRequestFiles(ctx context.Context, owner, repo string, prNumber int) ([]*github.CommitFile, error)
 }
 
-type Github struct {
+type githubC struct {
 	Token  string
 	Client *github.Client
 }
 
-func (g *Github) Connect(ctx context.Context, httpClient *http.Client) error {
+func NewGithub(token string) *githubC {
+	return &githubC{
+		Token: token,
+	}
+}
+
+func (g *githubC) Connect(ctx context.Context, httpClient *http.Client) error {
 	if httpClient == nil {
 		httpClient = &http.Client{Timeout: 10 * time.Second}
 	}
@@ -33,7 +39,7 @@ func (g *Github) Connect(ctx context.Context, httpClient *http.Client) error {
 	return nil
 }
 
-func (g *Github) ListPullRequestFiles(ctx context.Context, owner, repo string, prNumber int) ([]*github.CommitFile, error) {
+func (g *githubC) ListPullRequestFiles(ctx context.Context, owner, repo string, prNumber int) ([]*github.CommitFile, error) {
 	files, _, err := g.Client.PullRequests.ListFiles(ctx, owner, repo, prNumber, nil)
 	if err != nil {
 		logrus.Errorf("Error fetching pull request files: %v", err)

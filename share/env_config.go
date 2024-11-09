@@ -10,6 +10,7 @@ import (
 type EnvConfig interface {
 	GetHttpAddr() string
 	GetTelegramToken() string
+	GetGithubToken() string
 	GetChatID() int64
 	GetThreadID() int
 	InitConfig()
@@ -36,6 +37,9 @@ func (env *env) GetThreadID() int {
 		log.Fatalf("Invalid THREAD_ID: %v", err)
 	}
 	return threadID
+}
+func (env *env) GetGithubToken() string {
+	return os.Getenv("GITHUB_TOKEN")
 }
 
 func (env *env) InitConfig() {

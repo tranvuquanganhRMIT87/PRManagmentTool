@@ -1,5 +1,7 @@
 package telegrambotmodel
 
+import "strings"
+
 // Repository represents the repository information in the payload.
 type Repository struct {
 	FullName string `json:"full_name"`
@@ -29,4 +31,12 @@ type Payload struct {
 	Repository  Repository  `json:"repository"`
 	PullRequest PullRequest `json:"pull_request"`
 	Commits     []Commit    `json:"commits"`
+}
+
+func (p *Payload) GetOwner() string {
+	parts := strings.Split(p.Repository.FullName, "/")
+	if len(parts) > 1 {
+		return parts[0]
+	}
+	return ""
 }
