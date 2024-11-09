@@ -6,6 +6,7 @@ require (
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/docker/docker v27.3.1+incompatible // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
+	github.com/google/go-github/v66 v66.0.0 // indirect
 	github.com/inconshreveable/log15 v3.0.0-testing.5+incompatible // indirect
 	github.com/inconshreveable/log15/v3 v3.0.0-testing.5 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect

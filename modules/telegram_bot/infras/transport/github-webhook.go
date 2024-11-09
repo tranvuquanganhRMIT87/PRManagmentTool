@@ -35,5 +35,4 @@ func (h *httpService) GithubWebhookHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	w.WriteHeader(http.StatusOK)
-	log.Println("Success response")
 }

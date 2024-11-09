@@ -6,6 +6,8 @@ github.com/docker/docker v27.3.1+incompatible h1:KttF0XoteNTicmUtBO0L2tP+J7FGRFT
 github.com/docker/docker v27.3.1+incompatible/go.mod h1:eEKB0N0r5NX/I1kEveEz05bcu8tLC/8azJZsviup8Sk=
 github.com/go-stack/stack v1.8.1 h1:ntEHSVwIt7PNXNpgPmVfMrNhLtgjlmnZha2kOpuRiDw=
 github.com/go-stack/stack v1.8.1/go.mod h1:dcoOX6HbPZSZptuspn9bctJ+N/CnF5gGygcUP3XYfe4=
+github.com/google/go-github/v66 v66.0.0 h1:ADJsaXj9UotwdgK8/iFZtv7MLc8E8WBl62WLd/D/9+M=
+github.com/google/go-github/v66 v66.0.0/go.mod h1:+4SO9Zkuyf8ytMj0csN1NR/5OTR+MfqPp8P8dVlcvY4=
 github.com/inconshreveable/log15 v3.0.0-testing.5+incompatible h1:VryeOTiaZfAzwx8xBcID1KlJCeoWSIpsNbSk+/D2LNk=
 github.com/inconshreveable/log15 v3.0.0-testing.5+incompatible/go.mod h1:cOaXtrgN4ScfRrD9Bre7U1thNq5RtJ8ZoP4iXVGRj6o=
 github.com/inconshreveable/log15/v3 v3.0.0-testing.5 h1:h4e0f3kjgg+RJBlKOabrohjHe47D3bbAB9BgMrc3DYA=
