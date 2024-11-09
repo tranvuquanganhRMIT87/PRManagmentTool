@@ -8,9 +8,10 @@ type Repository struct {
 
 // PullRequest represents pull request information in the payload.
 type PullRequest struct {
-	Title string `json:"title"`
-	User  User   `json:"user"`
-	URL   string `json:"html_url"`
+	Title  string `json:"title"`
+	User   User   `json:"user"`
+	URL    string `json:"html_url"`
+	Number int    `json:"number"`
 }
 
 // User represents the user information in the pull request.

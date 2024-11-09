@@ -32,7 +32,7 @@ func (p *pushMessageUseCase) Execute(ctx context.Context, payload telegrambotmod
 	threadId := p.config.GetThreadID()
 
 	var message string
-	pr, _ := share.ExtractPRNumber(payload.PullRequest.URL)
+	//pr, _ := share.ExtractPRNumber(payload.PullRequest.URL)
 
 	switch payload.Action {
 	case "opened":
@@ -56,7 +56,7 @@ func (p *pushMessageUseCase) Execute(ctx context.Context, payload telegrambotmod
 				"🎉 **Congratulations!** The pull request has been successfully merged!\n\n"+
 				"👤 **Merged By:** %s\n\n"+
 				"🚀 **Happy coding!**",
-			pr,
+			payload.PullRequest.Number,
 			payload.PullRequest.User.Login,
 		)
 
