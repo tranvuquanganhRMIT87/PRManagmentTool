@@ -6,6 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
+	"ngrok-go-quickstart/Components/chatGPT"
 	githubs "ngrok-go-quickstart/Components/github"
 	components "ngrok-go-quickstart/Components/logrus"
 	internal "ngrok-go-quickstart/Components/telegram"
@@ -36,11 +37,17 @@ func Execute() {
 		log.Fatalf("Failed to connect to GitHub: %v", err)
 	}
 
+	openAI := chatGPT.NewOpenAI(config.GetOpenAIToken(), config.GetModels())
+	err = openAI.Connect(ctx, nil)
+	if err != nil {
+		log.Fatalf("Failed to connect to OpenAI: %v", err)
+	}
+
 	// Initialize server mux
 	mux := http.NewServeMux()
 
 	// Initialize service context
-	serviceContext := share.NewServiceContext(bot, config, githubAPI)
+	serviceContext := share.NewServiceContext(bot, config, githubAPI, openAI)
 
 	// Set up routes
 	telegram_bot.SetupTelegramBotService(serviceContext, mux)

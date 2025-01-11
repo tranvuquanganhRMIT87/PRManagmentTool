@@ -4,6 +4,7 @@ import "strings"
 
 // Repository represents the repository information in the payload.
 type Repository struct {
+	Name     string `json:"name"`
 	FullName string `json:"full_name"`
 	HTMLURL  string `json:"html_url"`
 }

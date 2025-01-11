@@ -1,6 +1,7 @@
 package transport
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -21,7 +22,9 @@ func (h *httpService) GithubWebhookHandler(w http.ResponseWriter, r *http.Reques
 	}
 	defer r.Body.Close()
 
-	ok, err := h.pushMessageHandler.Execute(r.Context(), payload)
+	ctx := context.Background()
+
+	ok, err := h.pushMessageHandler.Execute(ctx, payload)
 	if err != nil {
 		http.Error(w, "Failed to execute handler", http.StatusInternalServerError)
 		log.Printf("Error executing push message handler (Event: %s): %v", eventType, err)

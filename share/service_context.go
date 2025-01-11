@@ -13,11 +13,12 @@ type serviceContext struct {
 	Config      EnvConfig
 }
 
-func NewServiceContext(TelegramBot internal.TelegramBot, Config EnvConfig, GithubAPI githubs.GithubApi) *serviceContext {
+func NewServiceContext(TelegramBot internal.TelegramBot, Config EnvConfig, GithubAPI githubs.GithubApi, OpenAI chatGPT.CodeReviewAssistant) *serviceContext {
 	return &serviceContext{
 		TelegramBot: TelegramBot,
 		Config:      Config,
 		GithubAPI:   GithubAPI,
+		OpenAI:      OpenAI,
 	}
 }
 

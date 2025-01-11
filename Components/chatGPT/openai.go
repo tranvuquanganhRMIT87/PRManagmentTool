@@ -45,7 +45,7 @@ func (o *openAI) Connect(ctx context.Context, httpClient *http.Client) error {
 		return fmt.Errorf("failed to connect to OpenAI API: %v", err)
 	}
 
-	logrus.Info("Connected to GitHub API")
+	logrus.Info("Connected to OpenAI API")
 
 	return nil
 }

@@ -56,13 +56,10 @@ func (g *githubC) ListPullRequestFiles(ctx context.Context, owner, repo string, 
 func (g *githubC) GetBranchDiff(ctx context.Context, owner, repo, base, head string) ([]*github.CommitFile, error) {
 	files, _, err := g.Client.Repositories.CompareCommits(ctx, owner, repo, base, head, nil)
 	if err != nil {
-		logrus.Errorf("Error fetching branch diff: %v", err)
 		return nil, err
 	}
 
-	logrus.Infof("Fetched %d files from branch diff %s...%s in %s/%s", len(files.Files), base, head, owner, repo)
 	return files.Files, nil
-
 }
 
 func (g *githubC) GetLastCommit(ctx context.Context, owner, repo string, number int) (string, error) {

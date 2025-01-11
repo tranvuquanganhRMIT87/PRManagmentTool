@@ -70,56 +70,64 @@ func (p *pushMessageUseCase) Execute(ctx context.Context, payload telegrambotmod
 		)
 
 	}
+	var formattedMessage components.Message
 
 	if message != "" {
-		formattedMessage := components.NewBotMessage(chatId, &threadId, message)
-
-		if err := p.action.SendMessage(formattedMessage); err != nil {
-			return false, err
+		if threadId != 0 {
+			formattedMessage = components.NewBotMessage(chatId, &threadId, message)
+		} else {
+			formattedMessage = components.NewBotMessage(chatId, nil, message)
 		}
+		fmt.Println(formattedMessage)
+		//if err := p.action.SendMessage(formattedMessage); err != nil {
+		//	return false, err
+		//}
 	}
 
 	owner := payload.GetOwner()
-	repo := payload.Repository.FullName
+	repo := payload.Repository.Name
 	prNumber := payload.PullRequest.Number
 	head := payload.PullRequest.Head.Ref
 	base := payload.PullRequest.Base.Ref
 
-	//files, err := p.githubAPI.ListPullRequestFiles(ctx, owner, repo, prNumber)
-	//if err != nil {
-	//	log.Fatalf("Failed to list PR files: %v", err)
-	//}
+	if payload.Action == "opened" {
 
-	commitFiles, err := p.githubAPI.GetBranchDiff(ctx, owner, repo, base, head)
-	if err != nil {
-		log.Fatalf("Failed to get branch diff: %v", err)
-	}
+		//files, err := p.githubAPI.ListPullRequestFiles(ctx, owner, repo, prNumber)
+		//if err != nil {
+		//	log.Fatalf("Failed to list PR files: %v", err)
+		//}
 
-	var patchesList []*github.CommitFile
-	for _, file := range commitFiles {
-		if len(share.Encode(file.GetPatch())) <= share.MaxTokens/2 {
-			patchesList = append(patchesList, file)
-		} else {
-			logrus.Printf("Skipping file %s due to large patch size", file.GetFilename())
+		commitFiles, err := p.githubAPI.GetBranchDiff(ctx, owner, repo, base, head)
+		if err != nil {
+			log.Fatalf("Failed to get branch diff: %v", err)
 		}
-	}
 
-	for _, file := range patchesList {
-		if suggestionText, err := p.openai.GetOpenAiSuggestions(ctx, file.GetPatch()); err == nil {
-			firstChangedLine := share.ExtractFirstChangedLine(file.GetPatch())
-			lastCommit, err := p.githubAPI.GetLastCommit(ctx, owner, repo, prNumber)
-			if err != nil {
-				return false, err
+		var patchesList []*github.CommitFile
+		for _, file := range commitFiles {
+			if len(share.Encode(file.GetPatch())) <= share.MaxTokens/2 {
+				patchesList = append(patchesList, file)
+			} else {
+				logrus.Printf("Skipping file %s due to large patch size", file.GetFilename())
 			}
-			path := file.GetFilename()
-			comment := &github.PullRequestComment{
-				Body:     github.String(fmt.Sprintf("[ChatGPTReviewer]\n%s", suggestionText)),
-				Path:     &path,
-				CommitID: &lastCommit,
-				Line:     &firstChangedLine,
-			}
-			if err := p.githubAPI.CreateComment(ctx, owner, repo, prNumber, comment); err != nil {
-				return false, err
+		}
+
+		for _, file := range patchesList {
+			if suggestionText, err := p.openai.GetOpenAiSuggestions(ctx, file.GetPatch()); err == nil {
+				firstChangedLine := share.ExtractFirstChangedLine(file.GetPatch())
+				lastCommit, err := p.githubAPI.GetLastCommit(ctx, owner, repo, prNumber)
+				if err != nil {
+					return false, err
+				}
+				path := file.GetFilename()
+				comment := &github.PullRequestComment{
+					Body:     github.String(fmt.Sprintf("[ChatGPTReviewer]\n%s", suggestionText)),
+					Path:     &path,
+					CommitID: &lastCommit,
+					Line:     &firstChangedLine,
+				}
+				if err := p.githubAPI.CreateComment(ctx, owner, repo, prNumber, comment); err != nil {
+					return false, err
+				}
 			}
 		}
 	}
